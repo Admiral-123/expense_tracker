@@ -1,3 +1,5 @@
+import 'package:expense_tracker/custom_widgets/login_signup_pages.dart';
+import 'package:expense_tracker/login_signup_pages/login_page.dart';
 import 'package:expense_tracker/pages/lent.dart';
 import 'package:expense_tracker/pages/owed.dart';
 import 'package:expense_tracker/pages/spending.dart';
@@ -20,6 +22,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => SupabaseProvider()),
       ],
+      child: const MyApp(),
     ),
   );
 }
@@ -32,7 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Expanse Tracker',
       color: Colors.amber,
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: SplashScr(),
     );
   }
 }
@@ -74,5 +77,61 @@ class HomeState extends State<Home> {
         ],
       ),
     );
+  }
+}
+
+class SplashScr extends StatefulWidget {
+  const SplashScr({super.key});
+
+  @override
+  State<SplashScr> createState() => _SplashScrState();
+}
+
+class _SplashScrState extends State<SplashScr> {
+  @override
+  initState() {
+    super.initState();
+    switchScr();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/logo.png'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> switchScr() async {
+    await Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => StreamBuilder(
+            stream: context.read<SupabaseProvider>().onAuthState(),
+            builder: (context, snapshot) {
+              var session = snapshot.hasData ? snapshot.data!.session : null;
+
+              if (session != null) {
+                return Home();
+              } else {
+                return LoginPage();
+              }
+            },
+          ),
+        ),
+      );
+    });
   }
 }
