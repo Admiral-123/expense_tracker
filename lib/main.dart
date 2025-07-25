@@ -1,4 +1,3 @@
-import 'package:expense_tracker/custom_widgets/login_signup_pages.dart';
 import 'package:expense_tracker/login_signup_pages/login_page.dart';
 import 'package:expense_tracker/pages/lent.dart';
 import 'package:expense_tracker/pages/owed.dart';
