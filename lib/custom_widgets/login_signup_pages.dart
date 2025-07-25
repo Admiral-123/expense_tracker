@@ -1,7 +1,9 @@
 import 'package:expense_tracker/login_signup_pages/login_page.dart';
 import 'package:expense_tracker/login_signup_pages/signup_page.dart';
+import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/provider_backend/supabase_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginSignupPages extends StatefulWidget {
@@ -81,24 +83,37 @@ class _LoginSignupPagesState extends State<LoginSignupPages> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: TextButton(
-                onPressed: () {
-                  widget.isSignup
-                      ? _supabaseProvider.signUpWithEmail(
-                          usernameController.text.trim(),
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                        )
-                      : (() {
-                          try {
-                            _supabaseProvider.loginWithEmail(
-                              emailController.text.trim(),
-                              passwordController.text.trim(),
-                            );
-                          } on AuthException catch (e) {
-                            print('problem $e');
-                          }
-                        });
+                onPressed: () async {
+                  if (widget.isSignup) {
+                    await _supabaseProvider.signUpWithEmail(
+                      usernameController.text.trim(),
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    );
+                  } else {
+                    try {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CircularProgressIndicator();
+                        },
+                      );
+                      await context.read<SupabaseProvider>().loginWithEmail(
+                        emailController.text.trim(),
+                        passwordController.text.trim(),
+                      );
+
+                      Navigator.pushReplacement(
+                        // ignore: use_build_context_synchronously
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    } catch (e) {
+                      print('problem $e');
+                    }
+                  }
                 },
+
                 child: Text(widget.isSignup ? 'SignUp' : 'Login'),
               ),
             ),

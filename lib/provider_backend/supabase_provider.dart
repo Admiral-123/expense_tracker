@@ -11,28 +11,21 @@ class SupabaseProvider extends ChangeNotifier {
     String email,
     String password,
   ) async {
-    try {
-      await Supabase.instance.client.auth.signUp(
-        email: email,
-        password: password,
-        data: {'displayName': username},
-      );
-      // await Supabase.instance.client.auth.
-    } catch (e) {
-      print('problem is $e');
-    }
+    await Supabase.instance.client.auth.signUp(
+      email: email,
+      password: password,
+      data: {'displayName': username},
+    );
+
     notifyListeners();
   }
 
-  Future<void> loginWithEmail(String email, String password) async {
-    try {
-      await Supabase.instance.client.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      print(e);
-    }
+  Future<dynamic> loginWithEmail(String email, String password) async {
+    await Supabase.instance.client.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+
     notifyListeners();
   }
 }
