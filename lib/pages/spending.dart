@@ -1,4 +1,6 @@
+import 'package:expense_tracker/provider_backend/supabase_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Spending extends StatefulWidget {
   const Spending({super.key});
@@ -8,6 +10,12 @@ class Spending extends StatefulWidget {
 }
 
 class SpendingState extends State<Spending> {
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +23,14 @@ class SpendingState extends State<Spending> {
         title: Text('Spending'),
         backgroundColor: Colors.orangeAccent,
       ),
-      body: Center(child: Text('Spending')),
+      body: FutureBuilder(
+        future: context.read<SupabaseProvider>().getUsername(),
+        builder: (context, snapshot) {
+          var data = snapshot.data!;
+
+          return Center(child: Text(data));
+        },
+      ),
     );
   }
 }

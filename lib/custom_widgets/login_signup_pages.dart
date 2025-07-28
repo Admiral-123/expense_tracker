@@ -1,5 +1,6 @@
-import 'package:expense_tracker/login_signup_pages/login_page.dart';
-import 'package:expense_tracker/login_signup_pages/signup_page.dart';
+import 'package:expense_tracker/auth/login_page.dart';
+import 'package:expense_tracker/auth/signup_page.dart';
+import 'package:expense_tracker/auth/signup_waiting.dart';
 import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/provider_backend/supabase_provider.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,14 @@ class _LoginSignupPagesState extends State<LoginSignupPages> {
                       usernameController.text.trim(),
                       emailController.text.trim(),
                       passwordController.text.trim(),
+                    );
+                    Navigator.pushReplacement(
+                      // ignore: use_build_context_synchronously
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SignupWaiting(email: emailController.text.trim()),
+                      ),
                     );
                   } else {
                     try {

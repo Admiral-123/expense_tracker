@@ -14,6 +14,7 @@ class SupabaseProvider extends ChangeNotifier {
     await Supabase.instance.client.auth.signUp(
       email: email,
       password: password,
+      emailRedirectTo: "expensetracker://login-callback",
       data: {'displayName': username},
     );
 
@@ -27,5 +28,9 @@ class SupabaseProvider extends ChangeNotifier {
     );
 
     notifyListeners();
+  }
+
+  Future<String> getUsername() async {
+    return Supabase.instance.client.auth.currentUser!.email!;
   }
 }
