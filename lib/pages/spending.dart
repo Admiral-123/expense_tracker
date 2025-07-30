@@ -1,3 +1,4 @@
+import 'package:expense_tracker/custom_widgets/my_progress_circle.dart';
 import 'package:expense_tracker/provider_backend/supabase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,12 +24,22 @@ class SpendingState extends State<Spending> {
         title: Text('Spending'),
         backgroundColor: Colors.orangeAccent,
       ),
-      body: FutureBuilder(
-        future: context.read<SupabaseProvider>().getUsername(),
+      body: StreamBuilder(
+        stream: context.read<SupabaseProvider>().spendStream(),
         builder: (context, snapshot) {
-          var data = snapshot.data!;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: MyProgressCircle(msgText: 'please wait'));
+          }
+          if (!snapshot.hasData) {
+            return Center(child: Text('No Spending yet :|'));
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong :('));
+          }
 
-          return Center(child: Text(data));
+          final data = snapshot.data!;
+
+          return ListView.builder(itemBuilder: (context, index) {});
         },
       ),
     );

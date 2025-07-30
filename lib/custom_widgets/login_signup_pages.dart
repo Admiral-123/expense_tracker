@@ -1,6 +1,7 @@
 import 'package:expense_tracker/auth/login_page.dart';
 import 'package:expense_tracker/auth/signup_page.dart';
 import 'package:expense_tracker/auth/signup_waiting.dart';
+import 'package:expense_tracker/custom_widgets/my_progress_circle.dart';
 import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/provider_backend/supabase_provider.dart';
 import 'package:flutter/material.dart';
@@ -104,19 +105,30 @@ class _LoginSignupPagesState extends State<LoginSignupPages> {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return CircularProgressIndicator();
+                          return MyProgressCircle(
+                            msgText:
+                                'Please wait\nif taking too long you might gave wrong info',
+                          );
                         },
                       );
-                      await context.read<SupabaseProvider>().loginWithEmail(
-                        emailController.text.trim(),
-                        passwordController.text.trim(),
-                      );
-
-                      Navigator.pushReplacement(
-                        // ignore: use_build_context_synchronously
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
+                      if (emailController.text.trim().isEmpty == false &&
+                          passwordController.text.trim().isEmpty == false) {
+                        await context.read<SupabaseProvider>().loginWithEmail(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        );
+                        // Dialog(
+                        //   child: MyProgressCircle(
+                        //     msgText:
+                        //         'Please wait\nif taking too long you might gave wrong info',
+                        //   ),
+                        // );
+                        Navigator.pushReplacement(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      }
                     } catch (e) {
                       print('problem $e');
                     }
